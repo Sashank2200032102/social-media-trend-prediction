@@ -1,13 +1,55 @@
-/* HomePage.css */
+/* Layout */
 .homepage {
+  display: flex;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #74ebd5, #9face6);
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100vh;
+  background: #2c3e50;
+  color: white;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.sidebar a {
+  padding: 12px 20px;
+  text-decoration: none;
+  color: white;
+  display: block;
+  transition: 0.3s;
+  font-size: 15px;
+}
+
+.sidebar a:hover {
+  background: #34495e;
+  cursor: pointer;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 220px; /* push right */
+  flex: 1;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-height: 100vh;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #74ebd5, #9face6);
 }
 
 h1 {
@@ -17,6 +59,7 @@ h1 {
   text-align: center;
 }
 
+/* Upload Box */
 .upload-box {
   background: #fff;
   padding: 25px;
@@ -68,7 +111,7 @@ button:last-child:hover {
   background-color: #d32f2f;
 }
 
-/* File Info Box */
+/* File Info */
 .file-info {
   background: #fff;
   padding: 15px;
@@ -79,7 +122,7 @@ button:last-child:hover {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Data Preview Table */
+/* Preview Table */
 .data-preview {
   margin-top: 20px;
   background: #fff;
@@ -133,5 +176,5 @@ button:last-child:hover {
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 10px;
-  height: 250px; /* 🔥 Reduced height */
+  height: 250px;
 }
