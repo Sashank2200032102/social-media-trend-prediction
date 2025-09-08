@@ -33,15 +33,23 @@ function HomePage() {
   const [fileInfoVisible, setFileInfoVisible] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
+  const [sentimentVisible, setSentimentVisible] = useState(false);
+  const [recommendVisible, setRecommendVisible] = useState(false);
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
+
+  const resetViews = () => {
+    setFileInfoVisible(false);
+    setPreviewVisible(false);
+    setStatsVisible(false);
+    setSentimentVisible(false);
+    setRecommendVisible(false);
+  };
 
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
     setFile(uploadedFile);
-    setFileInfoVisible(false);
-    setPreviewVisible(false);
-    setStatsVisible(false);
+    resetViews();
 
     if (uploadedFile && uploadedFile.type === "text/csv") {
       Papa.parse(uploadedFile, {
@@ -66,22 +74,30 @@ function HomePage() {
 
   const handleCancel = () => {
     setFile(null);
-    setFileInfoVisible(false);
-    setPreviewVisible(false);
-    setStatsVisible(false);
+    resetViews();
     setData([]);
     setColumns([]);
     document.getElementById("fileInput").value = "";
   };
 
   const previewData = () => {
+    resetViews();
     setPreviewVisible(true);
-    setStatsVisible(false);
   };
 
   const showStats = () => {
-    setPreviewVisible(false);
+    resetViews();
     setStatsVisible(true);
+  };
+
+  const showSentiment = () => {
+    resetViews();
+    setSentimentVisible(true);
+  };
+
+  const showRecommendations = () => {
+    resetViews();
+    setRecommendVisible(true);
   };
 
   // Dataset stats
@@ -144,17 +160,44 @@ function HomePage() {
     maintainAspectRatio: false,
   };
 
+  // Sentiment Analysis (dummy example if CSV already has "Sentiment" column)
+  const sentimentCounts = { Positive: 0, Negative: 0, Neutral: 0 };
+  data.forEach((row) => {
+    if (row.Sentiment) sentimentCounts[row.Sentiment]++;
+  });
+
+  const sentimentData = {
+    labels: Object.keys(sentimentCounts),
+    datasets: [
+      {
+        label: "Sentiment Distribution",
+        data: Object.values(sentimentCounts),
+        backgroundColor: ["#4CAF50", "#F44336", "#FFC107"],
+      },
+    ],
+  };
+
+  // Recommendations logic (simple rule-based)
+  const recommendations = [];
+  if (sentimentCounts.Positive > sentimentCounts.Negative) {
+    recommendations.push("✅ Keep up the positive engagement! Highlight popular topics.");
+  } else {
+    recommendations.push("⚠️ Negative sentiment detected. Address customer concerns quickly.");
+  }
+  recommendations.push("📅 Best time to post: Afternoons.");
+  recommendations.push("💡 Suggested: Share success stories & respond to user feedback.");
+
   return (
     <div className="homepage">
       {/* Sidebar */}
       <div className="sidebar">
         <h2>📊 Dashboard</h2>
-        <a onClick={() => { setPreviewVisible(false); setStatsVisible(false); }}>🏠 Home</a>
+        <a onClick={resetViews}>🏠 Home</a>
         <a onClick={handleUpload}>⬆️ Upload File</a>
         <a onClick={previewData}>👀 Preview Data</a>
         <a onClick={showStats}>📈 Statistics</a>
-        <a>😊 Sentiment Analysis</a>
-        <a>💡 Recommendations</a>
+        <a onClick={showSentiment}>😊 Sentiment Analysis</a>
+        <a onClick={showRecommendations}>💡 Recommendations</a>
       </div>
 
       {/* Main Content */}
@@ -206,6 +249,24 @@ function HomePage() {
               <div className="chart"><Pie data={pieData} options={smallOptions} /></div>
               <div className="chart"><Line data={lineData} options={smallOptions} /></div>
             </div>
+          </div>
+        )}
+
+        {sentimentVisible && (
+          <div className="sentiment-dashboard">
+            <h3>😊 Sentiment Analysis</h3>
+            <div className="chart"><Pie data={sentimentData} options={smallOptions} /></div>
+          </div>
+        )}
+
+        {recommendVisible && (
+          <div className="recommendations-dashboard">
+            <h3>💡 Recommendations</h3>
+            <ul>
+              {recommendations.map((rec, idx) => (
+                <li key={idx}>{rec}</li>
+              ))}
+            </ul>
           </div>
         )}
       </div>
