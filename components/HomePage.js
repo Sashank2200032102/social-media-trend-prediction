@@ -84,6 +84,7 @@ function HomePage() {
     setStatsVisible(true);
   };
 
+  // Dataset stats
   const totalRows = data.length;
   const uniqueUsers = new Set(data.map((row) => row.User)).size;
 
@@ -137,7 +138,6 @@ function HomePage() {
     ],
   };
 
-  // ✅ Chart options to reduce size
   const smallOptions = {
     plugins: { legend: { labels: { font: { size: 10 } } } },
     scales: { x: { ticks: { font: { size: 10 } } }, y: { ticks: { font: { size: 10 } } } },
@@ -146,62 +146,69 @@ function HomePage() {
 
   return (
     <div className="homepage">
-      <h1 className="title">📊 Social Media Trend Analysis And Recommendations</h1>
-
-      <div className="upload-box">
-        <input id="fileInput" type="file" onChange={handleFileChange} className="file-input" />
-        <div className="button-group">
-          <button className="upload-btn" onClick={handleUpload}>Upload</button>
-          <button className="cancel-btn" onClick={handleCancel}>Cancel</button>
-        </div>
+      {/* Sidebar */}
+      <div className="sidebar">
+        <h2>📊 Dashboard</h2>
+        <a onClick={() => { setPreviewVisible(false); setStatsVisible(false); }}>🏠 Home</a>
+        <a onClick={handleUpload}>⬆️ Upload File</a>
+        <a onClick={previewData}>👀 Preview Data</a>
+        <a onClick={showStats}>📈 Statistics</a>
+        <a>😊 Sentiment Analysis</a>
+        <a>💡 Recommendations</a>
       </div>
 
-      {fileInfoVisible && file && (
-        <div className="file-info card">
-          <h3>📂 File Information</h3>
-          <p><strong>Name:</strong> {file.name}</p>
-          <p><strong>Size:</strong> {(file.size / 1024).toFixed(2)} KB</p>
-        </div>
-      )}
+      {/* Main Content */}
+      <div className="main-content">
+        <h1>📊 Social Media Trend Analysis And Recommendations</h1>
 
-      {fileInfoVisible && (
-        <div className="action-buttons">
-          <button onClick={previewData}>Preview Data</button>
-          <button onClick={showStats}>Show Stats</button>
-        </div>
-      )}
-
-      {previewVisible && (
-        <div className="data-preview">
-          <h3>📊 Dataset Preview</h3>
-          <table border="1" cellSpacing="0" cellPadding="8">
-            <thead>
-              <tr>{columns.map((col, index) => <th key={index}>{col}</th>)}</tr>
-            </thead>
-            <tbody>
-              {data.slice(0, 5).map((row, rowIndex) => (
-                <tr key={rowIndex}>
-                  {columns.map((col, colIndex) => <td key={colIndex}>{row[col]}</td>)}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {statsVisible && (
-        <div className="stats-dashboard">
-          <h3>📈 Dataset Statistics</h3>
-          <p><strong>Total Rows:</strong> {totalRows}</p>
-          <p><strong>Unique Users:</strong> {uniqueUsers}</p>
-
-          <div className="charts">
-            <div className="chart"><Bar data={barData} options={smallOptions} /></div>
-            <div className="chart"><Pie data={pieData} options={smallOptions} /></div>
-            <div className="chart"><Line data={lineData} options={smallOptions} /></div>
+        <div className="upload-box">
+          <input id="fileInput" type="file" onChange={handleFileChange} className="file-input" />
+          <div className="button-group">
+            <button className="upload-btn" onClick={handleUpload}>Upload</button>
+            <button className="cancel-btn" onClick={handleCancel}>Cancel</button>
           </div>
         </div>
-      )}
+
+        {fileInfoVisible && file && (
+          <div className="file-info card">
+            <h3>📂 File Information</h3>
+            <p><strong>Name:</strong> {file.name}</p>
+            <p><strong>Size:</strong> {(file.size / 1024).toFixed(2)} KB</p>
+          </div>
+        )}
+
+        {previewVisible && (
+          <div className="data-preview">
+            <h3>📊 Dataset Preview</h3>
+            <table border="1" cellSpacing="0" cellPadding="8">
+              <thead>
+                <tr>{columns.map((col, index) => <th key={index}>{col}</th>)}</tr>
+              </thead>
+              <tbody>
+                {data.slice(0, 5).map((row, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {columns.map((col, colIndex) => <td key={colIndex}>{row[col]}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {statsVisible && (
+          <div className="stats-dashboard">
+            <h3>📈 Dataset Statistics</h3>
+            <p><strong>Total Rows:</strong> {totalRows}</p>
+            <p><strong>Unique Users:</strong> {uniqueUsers}</p>
+
+            <div className="charts">
+              <div className="chart"><Bar data={barData} options={smallOptions} /></div>
+              <div className="chart"><Pie data={pieData} options={smallOptions} /></div>
+              <div className="chart"><Line data={lineData} options={smallOptions} /></div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
